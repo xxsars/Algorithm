@@ -1,3 +1,15 @@
+/*
+    Author: xxsars
+    Use: debug(...);
+    Define the main function as follows：
+        #define LOCAL
+        #if defined LOCAL and !defined ONLINE_JUDGE
+        #include "algo/debug.h"
+        #else
+        #define debug(...) ;
+        #endif
+*/
+
 #ifndef ALGO_DEBUG_H
 #define ALGO_DEBUG_H
 
