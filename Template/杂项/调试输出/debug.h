@@ -136,7 +136,7 @@ void debug_out(Head H, Tail... T) {
 }
 
 // Macro for debugging
-// #define debug(...) std::cerr << "(" << #__VA_ARGS__ << "): ", debug_out(__VA_ARGS__)
-#define debug(...) std::cerr << #__VA_ARGS__ << " = ", debug_out(__VA_ARGS__)
+#define debug(...) std::cerr << "(" << #__VA_ARGS__ << ") = ", debug_out(__VA_ARGS__)
+// #define debug(...) std::cerr << #__VA_ARGS__ << " = ", debug_out(__VA_ARGS__)
 
 #endif // ALGO_DEBUG_H
