@@ -2,12 +2,13 @@
     Author: xxsars
     Use: debug(...);
     Define the main function as follows：
-        #define LOCAL
         #if defined LOCAL and !defined ONLINE_JUDGE
         #include "algo/debug.h"
         #else
         #define debug(...) ;
         #endif
+    Prework:
+        #define LOCAL: should be added in your "bits/stdc++.h"
 */
 
 #ifndef ALGO_DEBUG_H
@@ -15,6 +16,7 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 #include <map>
 #include <set>
 #include <unordered_map>
@@ -26,6 +28,17 @@
 template <typename T, typename U>
 std::ostream &operator<<(std::ostream &os, const std::pair<T, U> &p) {
     return os << "(" << p.first << "," << p.second << ")";
+}
+
+// std::array
+template <typename T, std::size_t N>
+std::ostream &operator<<(std::ostream &os, const std::array<T, N> &arr) {
+    os << "[";
+    for (std::size_t i = 0; i < N; ++i) {
+        os << (i != 0 ? " " : "") << arr[i];
+    }
+    os << "]";
+    return os;
 }
 
 // std::vector
@@ -136,7 +149,12 @@ void debug_out(Head H, Tail... T) {
 }
 
 // Macro for debugging
-#define debug(...) std::cerr << "(" << #__VA_ARGS__ << ") = ", debug_out(__VA_ARGS__)
-// #define debug(...) std::cerr << #__VA_ARGS__ << " = ", debug_out(__VA_ARGS__)
+#define debug(...) \
+    if (sizeof(#__VA_ARGS__) == 1) { \
+        std::cerr << std::endl; \
+    } else { \
+        std::cerr << __LINE__ << ": (" << #__VA_ARGS__ << ") = "; \
+        debug_out(__VA_ARGS__); \
+    }
 
 #endif // ALGO_DEBUG_H
