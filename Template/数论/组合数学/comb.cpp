@@ -1,138 +1,79 @@
-template <unsigned M_> struct ModInt {
-    static constexpr unsigned M = M_;
-    unsigned x;
-    
-    constexpr ModInt() = default;
-    constexpr ModInt(unsigned x_) : x(x_ % M) {}
-    constexpr ModInt(unsigned long long x_) : x(x_ % M) {}
-    constexpr ModInt(int x_) : x(((x_ %= static_cast<int>(M)) < 0) ? (x_ + static_cast<int>(M)) : x_) {}
-    constexpr ModInt(long long x_) : x(((x_ %= static_cast<long long>(M)) < 0) ? (x_ + static_cast<long long>(M)) : x_) {}
-
-    constexpr ModInt operator++() {
-        (*this) += 1; return *this;
-    }
-    constexpr ModInt operator--() {
-        (*this) -= 1; return *this;
-    }
-    constexpr ModInt operator++(int) {
-        const ModInt temp = *this; ++(*this);
-        return temp;
-    }
-    constexpr ModInt operator--(int) {
-        const ModInt temp = *this; --(*this);
-        return temp;
-    }
-    ModInt &operator+=(const ModInt &a) {
-        x = ((x += a.x) >= M) ? (x - M) : x;
-        return *this;
-    }
-    ModInt &operator-=(const ModInt &a) {
-        x = ((x -= a.x) >= M) ? (x + M) : x;
-        return *this;
-    }
-    ModInt &operator*=(const ModInt &a) {
-        x = (static_cast<unsigned long long>(x) * a.x) % M;
-        return *this;
-    }
-    ModInt &operator/=(const ModInt &a) {
-        return (*this *= a.inv());
-    }
-    ModInt pow(long long e) const {
-        if (e < 0) return inv().pow(-e);
-        ModInt a = *this, res = 1U;
-        for (; e; e >>= 1, a *= a) { if (e & 1) res *= a; }
-        return res;
-    }
-    ModInt inv() const {
-        unsigned a = M, b = x; int y = 0, z = 1;
-        for (; b; ) {
-            const unsigned q = a / b;
-            const unsigned c = a - q * b;
-            a = b; b = c;
-            const int w = y - static_cast<int>(q) * z;
-            y = z; z = w;
-        }
-        assert(a == 1U);
-        return ModInt(y);
-    }
-    ModInt operator+() const {
-        return *this;
-    }
-    ModInt operator-() const {
-        ModInt a; a.x = x ? (M - x) : 0U;
-        return a;
-    }
-    ModInt operator+(const ModInt &a) const {
-        return (ModInt(*this) += a);
-    }
-    ModInt operator-(const ModInt &a) const {
-        return (ModInt(*this) -= a);
-    }
-    ModInt operator*(const ModInt &a) const {
-        return (ModInt(*this) *= a);
-    }
-    ModInt operator/(const ModInt &a) const {
-        return (ModInt(*this) /= a);
-    }
-    template <class T>
-    friend ModInt operator+(T a, const ModInt &b) {
-        return (ModInt(a) += b);
-    }
-    template <class T>
-    friend ModInt operator-(T a, const ModInt &b) {
-        return (ModInt(a) -= b);
-    }
-    template <class T>
-    friend ModInt operator*(T a, const ModInt &b) {
-        return (ModInt(a) *= b);
-    }
-    template <class T>
-    friend ModInt operator/(T a, const ModInt &b) {
-        return (ModInt(a) /= b);
-    }
-    explicit operator bool() const {
-        return x;
-    }
-    bool operator==(const ModInt &a) const {
-        return (x == a.x);
-    }
-    bool operator!=(const ModInt &a) const {
-        return (x != a.x);
-    }
-    bool operator<(const ModInt &a) const {
-        return (x < a.x);
-    }
-    bool operator>(const ModInt &a) const {
-        return (x > a.x);
-    }
-    friend std::ostream &operator<<(std::ostream &os, const ModInt &a) {
-        return os << a.x;
-    }
-    friend std::istream &operator>>(std::istream &is, ModInt &a) {
-        return is >> a.x;
-    }
+template <unsigned mod_> struct modular {
+  static constexpr unsigned mod = mod_;
+  unsigned x;
+  constexpr modular() = default;
+  constexpr modular(unsigned x_) : x(x_ % mod) {}
+  constexpr modular(unsigned long long x_) : x(x_ % mod) {}
+  constexpr modular(int x_) : x(((x_ %= static_cast<int>(mod)) < 0) ? (x_ + static_cast<int>(mod)) : x_) {}
+  constexpr modular(long long x_) : x(((x_ %= static_cast<long long>(mod)) < 0) ? (x_ + static_cast<long long>(mod)) : x_) {}
+  constexpr modular operator++() { (*this) += 1; return *this; }
+  constexpr modular operator--() { (*this) -= 1; return *this; }
+  constexpr modular operator++(int) { const modular t = *this; ++(*this); return t; }
+  constexpr modular operator--(int) { const modular t = *this; --(*this); return t; }
+  modular &operator+=(const modular &a) { x = ((x += a.x) >= mod) ? (x - mod) : x; return *this; }
+  modular &operator-=(const modular &a) { x = ((x -= a.x) >= mod) ? (x + mod) : x; return *this; }
+  modular &operator*=(const modular &a) { x = (static_cast<unsigned long long>(x) * a.x) % mod; return *this; }
+  modular &operator/=(const modular &a) { return (*this *= a.inv()); }
+  modular pow(long long e) const { if (e < 0) return inv().pow(-e); modular a = *this, res = 1U; for (; e; e >>= 1, a *= a) { if (e & 1) res *= a; } return res; }
+  modular inv() const { unsigned a = mod, b = x; int y = 0, z = 1; for (; b; ) { const unsigned q = a / b; const unsigned c = a - q * b; a = b; b = c; const int w = y - static_cast<int>(q) * z; y = z; z = w; } assert(a == 1U); return modular(y); }
+  modular operator+() const { return *this; }
+  modular operator-() const { modular a; a.x = x ? (mod - x) : 0U; return a; }
+  modular operator+(const modular &a) const { return (modular(*this) += a); }
+  modular operator-(const modular &a) const { return (modular(*this) -= a); }
+  modular operator*(const modular &a) const { return (modular(*this) *= a); }
+  modular operator/(const modular &a) const { return (modular(*this) /= a); }
+  template <class T> friend modular operator+(T a, const modular &b) { return (modular(a) += b); }
+  template <class T> friend modular operator-(T a, const modular &b) { return (modular(a) -= b); }
+  template <class T> friend modular operator*(T a, const modular &b) { return (modular(a) *= b); }
+  template <class T> friend modular operator/(T a, const modular &b) { return (modular(a) /= b); }
+  explicit operator bool() const { return x; }
+  bool operator==(const modular &a) const { return (x == a.x); }
+  bool operator!=(const modular &a) const { return (x != a.x); }
+  bool operator<(const modular &a) const { return (x < a.x); }
+  bool operator>(const modular &a) const { return (x > a.x); }
+  friend ostream &operator<<(ostream &os, const modular &a) { return os << a.x; }
+  friend istream &operator>>(istream &is, modular &a) { return is >> a.x; }
 };
-constexpr int Mod = 1e9 + 7;
-// constexpr int Mod = 998244353;
-using Mint = ModInt<Mod>;
+constexpr int Md = Md3; using Z = modular<Md>;
 
 struct Comb {
-    int n;
-    vector<Mint> fac;
-    vector<Mint> inv;
-    vector<Mint> invfac;
-
-    Comb(int n): fac(n + 1), inv(n + 1), invfac(n + 1) {
-        fac[0] = inv[0] = invfac[0] = 1;
-        for (int i = 1; i < n; i++) {
-            fac[i] = fac[i - 1] * i;
-            invfac[i] = invfac[i - 1] * Mint(i).inv();
-        }
+  int n;
+  vector<Z> _fac, _invfac, _inv;
+  Comb() : n{0}, _fac{1}, _invfac{1}, _inv{0} {}
+  Comb(int n) : Comb() { init(n); }
+  void init(int m) {
+    if (m <= n) return;
+    _fac.resize(m + 1);
+    _invfac.resize(m + 1);
+    _inv.resize(m + 1);
+    for (int i = n + 1; i <= m; i++) {
+      _fac[i] = _fac[i - 1] * i;
     }
-
-    Mint operator()(int n, int m) {
-        if (m > n || m < 0 || n < 0) return 0;
-        return fac[n] * invfac[m] * invfac[n - m];
+    _invfac[m] = _fac[m].inv();
+    for (int i = m; i > n; i--) {
+      _invfac[i - 1] = _invfac[i] * i;
+      _inv[i] = _invfac[i] * _fac[i - 1];
     }
-};
-Comb C((int)1E6 + 10);
+    n = m;
+  }
+  Z fac(int m) {
+    if (m > n) init(2 * m);
+    return _fac[m];
+  }
+  Z invfac(int m) {
+    if (m > n) init(2 * m);
+    return _invfac[m];
+  }
+  Z inv(int m) {
+    if (m > n) init(2 * m);
+    return _inv[m];
+  }
+  Z binom(int n, int m) {
+    if (n < m || m < 0) return 0;
+    return fac(n) * invfac(m) * invfac(n - m);
+  }
+  Z perm(int n, int m) {
+    if (n < m || m < 0) return 0;
+    return fac(n) * invfac(n - m);
+  }
+} comb;
